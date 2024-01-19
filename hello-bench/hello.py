@@ -737,7 +737,7 @@ class BenchRunner:
         print(cmd)
         rc = os.system(cmd)
         assert rc == 0
-        cmd = md = f"nerdctl --snapshotter {self.snapshotter} rmi {insecure_flag} -f {image_ref}"
+        cmd = f"nerdctl --snapshotter {self.snapshotter} rmi {insecure_flag} -f {image_ref}"
         print(cmd)
         rc = os.system(cmd)
         assert rc == 0

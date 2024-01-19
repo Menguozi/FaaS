@@ -14,8 +14,8 @@
 CURRENT_ROUND=1
 RESULT_FILE=result.txt
 RESULT_CSV=result.csv
-# NYDUSIFY_BIN=$(which nydusify)
-# NYDUS_IMAGE_BIN=$(which nydus-image)
+NYDUSIFY_BIN=$(which nydusify)
+NYDUS_IMAGE_BIN=$(which nydus-image)
 CONVERTOR=/opt/overlaybd/snapshotter/convertor
 
 #########################################################
@@ -133,15 +133,10 @@ function run() {
     sudo nerdctl container prune -f
     sudo nerdctl image prune -f --all
     # sudo systemctl restart nydus-snapshotter
-    for c in `ctr c ls -q`; do nerdctl container stop $c; nerdctl container rm $c; done
-    for c in `ctr content ls -q`; do ctr content rm $c; done
-    for c in `ctr i ls -q`; do ctr i rm $c; done
-    sudo rm -rf /opt/overlaybd/gzip_cache/*
     sudo rm -rf /opt/overlaybd/registry_cache/*
-    sudo systemctl restart containerd
-    sudo systemctl restart overlaybd-snapshotter
+    sudo rm -rf /opt/overlaybd/gzip_cache/*
     sudo systemctl restart overlaybd-tcmu
-    sudo systemctl daemon-reload
+    sudo systemctl restart overlaybd-snapshotter
     sleep 1
 
     # echo "[INFO] Run hello bench in ${image} ..."
@@ -233,14 +228,14 @@ function check_opts() {
 #   None
 #########################################################
 function check_binary() {
-    # if [ "${NYDUSIFY_BIN}" == "" ]; then
-    #     echo "[ERROR] nydusify is not found in \$PATH"
-    #     exit
-    # fi
-    # if [ "${NYDUS_IMAGE_BIN}" == "" ]; then
-    #     echo "[ERROR] nydus-image is not found in \$PATH"
-    #     exit
-    # fi
+    if [ "${NYDUSIFY_BIN}" == "" ]; then
+        echo "[ERROR] nydusify is not found in \$PATH"
+        exit
+    fi
+    if [ "${NYDUS_IMAGE_BIN}" == "" ]; then
+        echo "[ERROR] nydus-image is not found in \$PATH"
+        exit
+    fi
     
     if [ "${CONVERTOR}" == "" ]; then
         echo "[ERROR] convertor is not found in \$PATH"
